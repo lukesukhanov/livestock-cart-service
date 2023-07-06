@@ -69,6 +69,27 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/InvalidRequestParametersProblem'
+    delete:
+      tags:
+      - Products in cart
+      summary: Clears a cart for the user with the given id.
+      parameters:
+      - in: query
+        name: userId
+        description: The user's id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: Normal response
+        400:
+          description: Response in case the query parameter has invalid type
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestPropertyTypeMismatchProblem'
   /productsInCart/{id}:
     delete:
       tags:
@@ -78,6 +99,13 @@ paths:
       - in: path
         name: id
         description: The id of the product in the cart
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - in: query
+        name: userId
+        description: The user's id
         required: true
         schema:
           type: integer

@@ -36,6 +36,14 @@ public interface ProductInCartService {
    * 
    * @param productInCartId a {@code Long} representing id of the product in the
    *        cart
+   * @param userId a {@code Long} representing user's id
    */
-  void removeProductFromCart(Long productInCartId);
+  void removeProductFromCart(Long productInCartId, Long userId);
+
+  /**
+   * Clears a cart for the user with the given id.
+   * 
+   * @param userId a {@code Long} representing user's id
+   */
+  void clearCartByUserId(Long userId);
 }

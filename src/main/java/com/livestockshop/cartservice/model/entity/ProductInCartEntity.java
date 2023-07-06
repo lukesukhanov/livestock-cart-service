@@ -2,7 +2,6 @@ package com.livestockshop.cartservice.model.entity;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.livestockshop.cartservice.repository.ProductInCartRepository;
 
 import jakarta.persistence.Column;
@@ -47,6 +46,8 @@ import lombok.Setter;
         + "from ProductInCartEntity where userId = :userId")
 @NamedQuery(name = "delete_product_in_cart_by_id",
     query = "delete from ProductInCartEntity where id = :productInCartId")
+@NamedQuery(name = "delete_products_in_cart_by_user_id",
+    query = "delete from ProductInCartEntity where userId = :userId")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -56,6 +57,7 @@ public class ProductInCartEntity {
 
   public static final String JPQL_FIND_PRODUCTS_IN_CART_BY_USER_ID = "find_products_in_cart_by_user_id";
   public static final String JPQL_DELETE_PRODUCT_IN_CART_BY_ID = "delete_product_in_cart_by_id";
+  public static final String JPQL_DELETE_PRODUCTS_IN_CART_BY_USER_ID = "delete_products_in_cart_by_user_id";
 
   @Id
   @GeneratedValue(generator = "common_id_seq")
@@ -72,12 +74,6 @@ public class ProductInCartEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PRODUCT_ID")
   private ProductEntity product;
-
-  @JsonSetter("productId")
-  protected void setProductId(Long productId) {
-    this.product = new ProductEntity();
-    this.product.setId(productId);
-  }
 
   @Override
   public int hashCode() {

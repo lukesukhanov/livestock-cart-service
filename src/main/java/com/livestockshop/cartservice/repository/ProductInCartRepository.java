@@ -51,9 +51,20 @@ public interface ProductInCartRepository extends CrudRepository<ProductInCartEnt
    * 
    * @param productInCartId a {@code Long} representing id of the product in the
    *        cart
+   * @param userId a {@code Long} representing user's id
    */
   @Query(name = ProductInCartEntity.JPQL_DELETE_PRODUCT_IN_CART_BY_ID)
   @Modifying
-  @Override
-  void deleteById(@Param("productInCartId") Long productInCartId);
+  void deleteById(
+      @Param("productInCartId") Long productInCartId, 
+      @Param("userId") Long userId);
+  
+  /**
+   * Removes a products from the cart by user's id.
+   * 
+   * @param userId a {@code Long} representing user's id
+   */
+  @Query(name = ProductInCartEntity.JPQL_DELETE_PRODUCTS_IN_CART_BY_USER_ID)
+  @Modifying
+  void deleteByUserId(@Param("userId") Long userId);
 }

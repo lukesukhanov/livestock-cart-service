@@ -99,7 +99,17 @@ class ProductInCartControllerTest {
   @Test
   @DisplayName("removeProductFromCart(Long) - normal return")
   final void removeProductFromCart_normalReturn() throws Exception {
-    this.mockMvc.perform(delete("/productsInCart/1"))
+    this.mockMvc.perform(delete("/productsInCart/1")
+        .param("userId", "1"))
+        .andExpectAll(
+            status().isNoContent());
+  }
+
+  @Test
+  @DisplayName("clearCartByUserId(Long) - normal return")
+  final void clearCartByUserId_normalReturn() throws Exception {
+    this.mockMvc.perform(delete("/productsInCart")
+        .param("userId", "1"))
         .andExpectAll(
             status().isNoContent());
   }

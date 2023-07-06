@@ -68,4 +68,16 @@ class DefaultProductInCartServiceTest {
     ProductToAddIntoCart productToAdd = new ProductToAddIntoCart(1L, 1L, 1);
     assertDoesNotThrow(() -> this.productInCartService.addProductToCart(productToAdd));
   }
+
+  @Test
+  @DisplayName("removeProductFromCart(Long) - normal return")
+  final void removeProductFromCart_normalReturn() throws Exception {
+    assertDoesNotThrow(() -> this.productInCartService.removeProductFromCart(1L, 1L));
+  }
+
+  @Test
+  @DisplayName("clearCartByUserId(Long) - normal return")
+  final void clearCartByUserId_normalReturn() throws Exception {
+    assertDoesNotThrow(() -> this.productInCartService.clearCartByUserId(1L));
+  }
 }
