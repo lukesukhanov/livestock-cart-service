@@ -66,7 +66,12 @@ public class DefaultProductInCartService implements ProductInCartService {
   }
 
   @Override
-  public void removeProductFromCart(Long productInCartId) {
-    this.productInCartRepository.deleteById(productInCartId);
+  public void removeProductFromCart(Long productInCartId, Long userId) {
+    this.productInCartRepository.deleteById(productInCartId, userId);
+  }
+
+  @Override
+  public void clearCartByUserId(Long userId) {
+    this.productInCartRepository.deleteByUserId(userId);
   }
 }

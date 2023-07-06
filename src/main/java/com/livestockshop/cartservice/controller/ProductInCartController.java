@@ -168,6 +168,11 @@ public class ProductInCartController {
    * <ul>
    * <li>id - the id of the product in the cart, type: long, required</li>
    * </ul>
+   * Query parameters:
+   * <ul>
+   * <li>userId - the user's id, type: long, required</li>
+   * </ul>
+   * <p>
    * <p>
    * <b>Usage example</b>
    * <p>
@@ -187,11 +192,49 @@ public class ProductInCartController {
    * 
    * @param productInCartId a {@code Long} representing id of the product in the
    *        cart
+   * @param userId a {@code Long} representing user's id
    * @return a {@code ResponseEntity} with the status {@code 204}
    */
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> removeProductFromCart(@PathVariable("id") Long productInCartId) {
-    this.productInCartService.removeProductFromCart(productInCartId);
+  public ResponseEntity<?> removeProductFromCart(@PathVariable("id") Long productInCartId,
+      @RequestParam("userId") Long userId) {
+    this.productInCartService.removeProductFromCart(productInCartId, userId);
+    return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * Clears a cart for the user with the given id.
+   * <p>
+   * Serves the {@code DELETE} requests for the {@code /productsInCart}
+   * endpoint.
+   * <p>
+   * Query parameters:
+   * <ul>
+   * <li>userId - the user's id, type: long, required</li>
+   * </ul>
+   * <p>
+   * <b>Usage example</b>
+   * <p>
+   * <i>Request</i>
+   * <p>
+   * DELETE /productsInCart?userId=1<br />
+   * <p>
+   * <i>Normal response</i>
+   * <p>
+   * Status: 204<br />
+   * <p>
+   * <i>Response in case the path variable has invalid type</i>
+   * <p>
+   * Status: 400<br />
+   * Body: {type: "/probs/requestPropertyTypeMismatch", title: "Request property
+   * type mismatch", status: 400, detail: "Failed to convert value ..."}
+   * 
+   * @param userId a {@code Long} representing user's id
+   * @return a {@code ResponseEntity} with the status {@code 204}
+   */
+  @DeleteMapping
+  public ResponseEntity<?> clearCartByUserId(@RequestParam("userId") Long userId) {
+    this.productInCartService.clearCartByUserId(userId);
     return ResponseEntity.noContent().build();
   }
 }
