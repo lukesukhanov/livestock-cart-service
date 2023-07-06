@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+  title: Service for products in cart
+  description: Products-in-cart service for the 'Livestock shop' project.
+  contact:
+    name: Luke Sukhanov
+    email: lukesukhanov@gmail.com
+    url: https://github.com/lukesukhanov
+  version: '1.0'
+servers:
+- url: http://127.0.0.1:8083
+paths:
+  /productsInCart:
+    get:
+      tags:
+      - Products in cart
+      summary: Finds products in a cart by user's id using paging
+      parameters:
+      - in: query
+        name: page
+        description: The required page
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - in: query
+        name: size
+        description: The page size
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - in: query
+        name: userId
+        description: The user's id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Normal response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsInCartPage'
+        400:
+          description: Response in case of invalid request parameters
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestParametersProblem'
+components:
+  schemas:
+    ProductInCart:
+      type: object
+      properties:
+        productName:
+          type: string
+          example: Овцы бараны
+        description:
+          type: string
+          example: Продаю баранов и овец
+        quantity:
+          type: integer
+          format: int32
+          example: 2
+        price:
+          type: number
+          format: double
+          example: 9500
+        currency:
+          type: string
+          example: RUB
+    ProductsInCartPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductInCart'
+        numberOfElements:
+          type: integer
+          format: int32
+          example: 5
+        first:
+          type: boolean
+          example: true
+        last:
+          type: boolean
+          example: false
+        totalElements:
+          type: integer
+          format: int32
+          example: 10
+        totalPages:
+          type: integer
+          format: int32
+          example: 2
+    InvalidRequestParametersProblem:
+      type: object
+      properties:
+        type:
+          type: string
+          example: /probs/invalidRequestParameters
+        title:
+          type: string
+          example: Invalid request parameters
+        status:
+          type: integer
+          format: int32
+          example: 400
+        invalid-params:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvalidRequestParameter'
+    InvalidRequestParameter:
+      type: object
+      properties:
+        name:
+          type: string
+          example: page
+        reason:
+          type: string
+          example: Page ordinal must be greater than or equal to 0
