@@ -50,6 +50,25 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/InvalidRequestParametersProblem'
+    post:
+      tags:
+      - Products in cart
+      summary: Adds the given quantity of the given product into the user's cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductToAddIntoCart'
+      responses:
+        204:
+          description: Normal response
+        400:
+          description: Response in case of invalid request parameters
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestParametersProblem'
 components:
   schemas:
     ProductInCart:
@@ -123,3 +142,44 @@ components:
         reason:
           type: string
           example: Page ordinal must be greater than or equal to 0
+    ProductToAddIntoCart:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 1
+        productId:
+          type: integer
+          format: int64
+          example: 1
+        quantity:
+          type: integer
+          format: int32
+          example: 2
+    InvalidRequestBodyFieldsProblem:
+      type: object
+      properties:
+        type:
+          type: string
+          example: /probs/invalidRequestBodyFields
+        title:
+          type: string
+          example: Invalid request body fields
+        status:
+          type: integer
+          format: int32
+          example: 400
+        invalid-fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvalidRequestBodyField'
+    InvalidRequestBodyField:
+      type: object
+      properties:
+        name:
+          type: string
+          example: userId
+        reason:
+          type: string
+          example: The user's id is required
