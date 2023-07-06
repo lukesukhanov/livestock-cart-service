@@ -1,6 +1,7 @@
 package com.livestockshop.cartservice.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -91,6 +92,14 @@ class ProductInCartControllerTest {
     this.mockMvc.perform(post("/productsInCart")
         .contentType(MediaType.APPLICATION_JSON)
         .content(this.objectMapper.writeValueAsBytes(productToAdd)))
+        .andExpectAll(
+            status().isNoContent());
+  }
+
+  @Test
+  @DisplayName("removeProductFromCart(Long) - normal return")
+  final void removeProductFromCart_normalReturn() throws Exception {
+    this.mockMvc.perform(delete("/productsInCart/1"))
         .andExpectAll(
             status().isNoContent());
   }

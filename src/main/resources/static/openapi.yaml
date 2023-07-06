@@ -69,6 +69,28 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/InvalidRequestParametersProblem'
+  /productsInCart/{id}:
+    delete:
+      tags:
+      - Products in cart
+      summary: Removes a product from the cart by id
+      parameters:
+      - in: path
+        name: id
+        description: The id of the product in the cart
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: Normal response
+        400:
+          description: Response in case the path variable has invalid type
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/RequestPropertyTypeMismatchProblem'
 components:
   schemas:
     ProductInCart:
@@ -183,3 +205,19 @@ components:
         reason:
           type: string
           example: The user's id is required
+    RequestPropertyTypeMismatchProblem:
+      type: object
+      properties:
+        type:
+          type: string
+          example: /probs/requestPropertyTypeMismatch
+        title:
+          type: string
+          example: Request property type mismatch
+        status:
+          type: integer
+          format: int32
+          example: 400
+        detail:
+          type: string
+          example: Failed to convert value ...

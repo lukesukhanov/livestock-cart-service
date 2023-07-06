@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,10 +80,7 @@ public class ProductInCartController {
    * <p>
    * Status: 400<br />
    * Body: {type: "/probs/requestPropertyTypeMismatch", title: "Request property
-   * type mismatch", status: 400, detail: "Failed to convert value of type
-   * 'java.lang.String' to required type 'java.lang.Integer'; For input string:
-   * \"1.1\"", property: "page", requiredType: "java.lang.Integer", value:
-   * "1.1"}
+   * type mismatch", status: 400, detail: "Failed to convert value ..."}
    * 
    * @param page a {@code Integer} representing page ordinal
    * @param size a {@code Integer} representing page size
@@ -156,6 +155,43 @@ public class ProductInCartController {
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> addProductToCart(@RequestBody @Valid ProductToAddIntoCart productToAdd) {
     this.productInCartService.addProductToCart(productToAdd);
+    return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * Removes a product from the cart by id.
+   * <p>
+   * Serves the {@code DELETE} requests for the {@code /productsInCart/{id}}
+   * endpoint.
+   * <p>
+   * Path variables:
+   * <ul>
+   * <li>id - the id of the product in the cart, type: long, required</li>
+   * </ul>
+   * <p>
+   * <b>Usage example</b>
+   * <p>
+   * <i>Request</i>
+   * <p>
+   * DELETE /productsInCart/1<br />
+   * <p>
+   * <i>Normal response</i>
+   * <p>
+   * Status: 204<br />
+   * <p>
+   * <i>Response in case the path variable has invalid type</i>
+   * <p>
+   * Status: 400<br />
+   * Body: {type: "/probs/requestPropertyTypeMismatch", title: "Request property
+   * type mismatch", status: 400, detail: "Failed to convert value ..."}
+   * 
+   * @param productInCartId a {@code Long} representing id of the product in the
+   *        cart
+   * @return a {@code ResponseEntity} with the status {@code 204}
+   */
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> removeProductFromCart(@PathVariable("id") Long productInCartId) {
+    this.productInCartService.removeProductFromCart(productInCartId);
     return ResponseEntity.noContent().build();
   }
 }
