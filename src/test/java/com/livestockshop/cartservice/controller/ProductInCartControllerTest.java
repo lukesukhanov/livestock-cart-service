@@ -2,6 +2,7 @@ package com.livestockshop.cartservice.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.livestockshop.cartservice.LivestockShopCartServiceApplication;
 import com.livestockshop.cartservice.model.dto.ProductInCartForRead;
+import com.livestockshop.cartservice.model.dto.ProductToAddIntoCart;
 import com.livestockshop.cartservice.model.entity.ProductInCartEntity_;
 import com.livestockshop.cartservice.service.ProductInCartService;
 
@@ -80,5 +82,16 @@ class ProductInCartControllerTest {
             status().isOk(),
             content().contentType(MediaType.APPLICATION_JSON),
             content().bytes(this.objectMapper.writeValueAsBytes(responseBody)));
+  }
+
+  @Test
+  @DisplayName("getByUserIdWithPaging(ProductToAddIntoCart) - normal return")
+  final void addProductToCart_normalReturn() throws Exception {
+    ProductToAddIntoCart productToAdd = new ProductToAddIntoCart(1L, 1L, 1);
+    this.mockMvc.perform(post("/productsInCart")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(this.objectMapper.writeValueAsBytes(productToAdd)))
+        .andExpectAll(
+            status().isNoContent());
   }
 }

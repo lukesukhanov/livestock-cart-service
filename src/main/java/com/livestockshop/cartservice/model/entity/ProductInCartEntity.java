@@ -2,6 +2,7 @@ package com.livestockshop.cartservice.model.entity;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.livestockshop.cartservice.repository.ProductInCartRepository;
 
 import jakarta.persistence.Column;
@@ -68,6 +69,12 @@ public class ProductInCartEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PRODUCT_ID")
   private ProductEntity product;
+
+  @JsonSetter("productId")
+  protected void setProductId(Long productId) {
+    this.product = new ProductEntity();
+    this.product.setId(productId);
+  }
 
   @Override
   public int hashCode() {

@@ -10,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -22,9 +24,46 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Handles general controller exceptions.
  */
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class GeneralResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
+      HttpHeaders readOnlyHeaders, HttpStatusCode status, WebRequest request) {
+
+    log.debug("Handling {}", e.toString());
+    List<Map<String, String>> invalidFields = e
+        .getBindingResult()
+        .getFieldErrors()
+        .stream()
+        .map(fieldError -> Map.of(
+            "name", fieldError.getField(),
+            "reason", fieldError.getDefaultMessage()))
+        .toList();
+    Map<String, ?> responseBody = Map.of(
+        "type", request.getContextPath() + "/probs/invalidRequestBodyFields",
+        "title", "Invalid request body fields",
+        "status", "400",
+        "invalid-fields", invalidFields);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
+    return handleExceptionInternal(e, responseBody, headers, HttpStatus.BAD_REQUEST, request);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
+      HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+    log.debug("Handling {}", e.toString());
+    Map<String, ?> responseBody = Map.of(
+        "type", request.getContextPath() + "/probs/invalidRequestBody",
+        "title", "Invalid request body",
+        "status", "400",
+        "detail", e.getMessage());
+    headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
+    return handleExceptionInternal(e, responseBody, headers, HttpStatus.BAD_REQUEST, request);
+  }
 
   @Override
   protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException e, HttpHeaders headers,

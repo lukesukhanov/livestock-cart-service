@@ -5,12 +5,17 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.livestockshop.cartservice.exception.GeneralResponseEntityExceptionHandler;
 import com.livestockshop.cartservice.model.dto.ProductInCartForRead;
+import com.livestockshop.cartservice.model.dto.ProductToAddIntoCart;
 import com.livestockshop.cartservice.service.ProductInCartService;
 
 import jakarta.validation.Valid;
@@ -30,6 +35,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequestMapping("/productsInCart")
+@Validated
 @RequiredArgsConstructor
 public class ProductInCartController {
 
@@ -86,12 +92,10 @@ public class ProductInCartController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getByUserIdWithPaging(
-      @RequestParam(name = "page", required = false)
-      @Valid
-      @PositiveOrZero(message = "Page ordinal must be greater than or equal to 0") Integer page,
-      @RequestParam(name = "size", required = false)
-      @Valid
-      @Positive(message = "Page size must be positive") Integer size,
+      @PositiveOrZero(message = "Page ordinal must be greater than or equal to 0")
+      @RequestParam(name = "page", required = false) Integer page,
+      @Positive(message = "Page size must be positive")
+      @RequestParam(name = "size", required = false) Integer size,
       @RequestParam(name = "userId", required = true) Long userId) {
 
     Page<ProductInCartForRead> productsInCart = this.productInCartService
@@ -104,5 +108,54 @@ public class ProductInCartController {
         "totalPages", productsInCart.getTotalPages(),
         "content", productsInCart.getContent());
     return ResponseEntity.ok(responseBody);
+  }
+
+  /**
+   * Adds the given quantity of the given product into the user's cart.<br />
+   * The quantity may be negative.<br />
+   * If the result quantity is less than or equal to 0, the product is removed
+   * from the cart.
+   * <p>
+   * Serves the {@code POST} requests for the {@code /productsInCart} endpoint.
+   * <p>
+   * Request body:
+   * <ul>
+   * <li>userId - the user's id, type: long, required</li>
+   * <li>productId - the product's id, type: long, required</li>
+   * <li>quantity - how many products to add: integer, required</li>
+   * </ul>
+   * <p>
+   * <b>Usage example</b>
+   * <p>
+   * <i>Request</i>
+   * <p>
+   * POST /productsInCart<br />
+   * Body: {userId": 452, productId": 26, quantity: 2}
+   * <p>
+   * <i>Normal response</i>
+   * <p>
+   * Status: 204<br />
+   * <p>
+   * <i>Response in case of invalid request body fields</i>
+   * <p>
+   * Status: 400<br />
+   * Body: {type: "/probs/invalidRequestBodyFields", title: "Invalid request
+   * body fields", status: 400, invalid-fields: [{"name": "userId", "reason":
+   * "The user's id is required"}]}
+   * <p>
+   * <i>Response in case of invalid request body</i>
+   * <p>
+   * Status: 400<br />
+   * Body: {type: "/probs/invalidRequestBody", title: "Invalid request body",
+   * status: 400, detail: "JSON parse error ..."}
+   * 
+   * @param productToAdd a {@code ProductInCartEntity} to add into the user's
+   *        cart
+   * @return a {@code ResponseEntity} with the status {@code 204}
+   */
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> addProductToCart(@RequestBody @Valid ProductToAddIntoCart productToAdd) {
+    this.productInCartService.addProductToCart(productToAdd);
+    return ResponseEntity.noContent().build();
   }
 }

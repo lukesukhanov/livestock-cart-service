@@ -1,5 +1,6 @@
 package com.livestockshop.cartservice.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 
 import com.livestockshop.cartservice.LivestockShopCartServiceApplication;
 import com.livestockshop.cartservice.model.dto.ProductInCartForRead;
+import com.livestockshop.cartservice.model.dto.ProductToAddIntoCart;
 import com.livestockshop.cartservice.model.entity.ProductInCartEntity_;
 import com.livestockshop.cartservice.repository.ProductInCartRepository;
 
@@ -58,5 +60,12 @@ class DefaultProductInCartServiceTest {
     Page<ProductInCartForRead> result = this.productInCartService.getByUserIdWithPaging(page, size,
         userId);
     assertEquals(result, this.existingProductsInCart);
+  }
+
+  @Test
+  @DisplayName("addProductToCart(ProductInCartEntity) - normal return")
+  final void addProductToCart_normalReturn() throws Exception {
+    ProductToAddIntoCart productToAdd = new ProductToAddIntoCart(1L, 1L, 1);
+    assertDoesNotThrow(() -> this.productInCartService.addProductToCart(productToAdd));
   }
 }
