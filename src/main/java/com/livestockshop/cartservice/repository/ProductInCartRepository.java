@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -44,4 +45,15 @@ public interface ProductInCartRepository extends CrudRepository<ProductInCartEnt
    */
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<ProductInCartEntity> findByUserIdAndProductId(Long userId, Long productId);
+
+  /**
+   * Removes a product from the cart by id.
+   * 
+   * @param productInCartId a {@code Long} representing id of the product in the
+   *        cart
+   */
+  @Query(name = ProductInCartEntity.JPQL_DELETE_PRODUCT_IN_CART_BY_ID)
+  @Modifying
+  @Override
+  void deleteById(@Param("productInCartId") Long productInCartId);
 }

@@ -45,6 +45,8 @@ import lombok.Setter;
     query = "select new com.livestockshop.cartservice.model.dto.ProductInCartForRead("
         + "product.productName, product.description, quantity, product.price, product.currency) "
         + "from ProductInCartEntity where userId = :userId")
+@NamedQuery(name = "delete_product_in_cart_by_id",
+    query = "delete from ProductInCartEntity where id = :productInCartId")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -53,6 +55,7 @@ public class ProductInCartEntity {
   public static final String ENTITY_GRAPH_WITH_PRODUCT = "productInCart.withProduct";
 
   public static final String JPQL_FIND_PRODUCTS_IN_CART_BY_USER_ID = "find_products_in_cart_by_user_id";
+  public static final String JPQL_DELETE_PRODUCT_IN_CART_BY_ID = "delete_product_in_cart_by_id";
 
   @Id
   @GeneratedValue(generator = "common_id_seq")

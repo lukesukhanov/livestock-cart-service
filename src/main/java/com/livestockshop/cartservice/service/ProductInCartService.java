@@ -30,4 +30,12 @@ public interface ProductInCartService {
    * @param product a {@code ProductToAddIntoCart} to add into the user's cart
    */
   void addProductToCart(ProductToAddIntoCart productToAdd);
+
+  /**
+   * Removes a product from the cart by id.
+   * 
+   * @param productInCartId a {@code Long} representing id of the product in the
+   *        cart
+   */
+  void removeProductFromCart(Long productInCartId);
 }
