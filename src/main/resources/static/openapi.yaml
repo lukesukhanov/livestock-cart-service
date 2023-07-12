@@ -14,7 +14,7 @@ paths:
     get:
       tags:
       - Products in cart
-      summary: Finds products in a cart by user's id using paging
+      summary: Finds products in a cart by user's email using paging
       parameters:
       - in: query
         name: page
@@ -31,12 +31,11 @@ paths:
           type: integer
           format: int32
       - in: query
-        name: userId
-        description: The user's id
+        name: userEmail
+        description: The user's email
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
       responses:
         200:
           description: Normal response
@@ -72,15 +71,14 @@ paths:
     delete:
       tags:
       - Products in cart
-      summary: Clears a cart for the user with the given id.
+      summary: Clears a cart for the user with the given email.
       parameters:
       - in: query
-        name: userId
-        description: The user's id
+        name: userEmail
+        description: The user's email
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
       responses:
         204:
           description: Normal response
@@ -94,22 +92,21 @@ paths:
     delete:
       tags:
       - Products in cart
-      summary: Removes a product from the cart by id
+      summary: Removes a product from the cart by product's id and user's email
       parameters:
       - in: path
-        name: id
-        description: The id of the product in the cart
+        name: productId
+        description: The product's id
         required: true
         schema:
           type: integer
           format: int64
       - in: query
-        name: userId
-        description: The user's id
+        name: userEmail
+        description: The user's email
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
       responses:
         204:
           description: Normal response
@@ -195,10 +192,9 @@ components:
     ProductToAddIntoCart:
       type: object
       properties:
-        userId:
-          type: integer
-          format: int64
-          example: 1
+        userEmail:
+          type: string
+          example: "vasya@gmail.com"
         productId:
           type: integer
           format: int64
@@ -232,7 +228,7 @@ components:
           example: userId
         reason:
           type: string
-          example: The user's id is required
+          example: The user's email is required
     RequestPropertyTypeMismatchProblem:
       type: object
       properties:

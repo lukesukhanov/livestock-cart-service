@@ -6,11 +6,11 @@ SET search_path TO livestock_shop_dev;
 DROP TABLE IF EXISTS product_in_cart CASCADE;
 CREATE TABLE product_in_cart (
 	id bigint NOT NULL PRIMARY KEY DEFAULT nextval('common_id_seq'),
-	users_id bigint NOT NULL REFERENCES users(id),
-	product_id bigint NOT NULL REFERENCES product(id),
 	quantity integer NOT NULL CHECK (quantity > 0),
 	created_at timestamp with time zone NOT NULL,
-	last_modified_at timestamp with time zone NOT NULL
+	last_modified_at timestamp with time zone NOT NULL,
+	users_email varchar NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+	product_id bigint NOT NULL REFERENCES product(id) ON DELETE CASCADE
 );
 -- rollback DROP TABLE IF EXISTS product_in_cart CASCADE;
 
