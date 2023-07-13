@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.livestock.cartservice.LivestockShopCartServiceApplication;
+import com.livestock.cartservice.Application;
 import com.livestock.cartservice.model.dto.ProductToAddIntoCart;
 import com.livestock.cartservice.model.entity.ProductInCartEntity;
 
-@SpringBootTest(classes = LivestockShopCartServiceApplication.class)
+@SpringBootTest(classes = Application.class)
 @DisplayName("ProductInCartMapper")
 @Tag("mapper")
 @Tag("productInCart")

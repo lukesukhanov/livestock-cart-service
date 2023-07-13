@@ -46,6 +46,11 @@ spring:
     liquibase-schema: livestock_shop_dev_liquibase
     default-schema: livestock_shop_dev
     drop-first: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9000
 
 logging:
   config: classpath:logback-dev.xml

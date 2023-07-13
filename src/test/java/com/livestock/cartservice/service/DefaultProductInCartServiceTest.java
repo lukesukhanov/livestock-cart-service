@@ -2,6 +2,7 @@ package com.livestock.cartservice.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -19,14 +20,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.test.context.support.WithMockUser;
 
-import com.livestock.cartservice.LivestockShopCartServiceApplication;
+import com.livestock.cartservice.Application;
 import com.livestock.cartservice.model.dto.ProductInCartForRead;
 import com.livestock.cartservice.model.dto.ProductToAddIntoCart;
 import com.livestock.cartservice.model.entity.ProductInCartEntity_;
 import com.livestock.cartservice.repository.ProductInCartRepository;
 
-@SpringBootTest(classes = LivestockShopCartServiceApplication.class)
+@SpringBootTest(classes = Application.class)
 @DisplayName("DefaultProductInCartService")
 @Tag("service")
 @Tag("productInCart")
@@ -65,9 +68,19 @@ class DefaultProductInCartServiceTest {
 
   @Test
   @DisplayName("addProductToCart(ProductInCartEntity) - normal return")
+  @WithMockUser(username = "vasya@gmail.com")
   final void addProductToCart_normalReturn() throws Exception {
     ProductToAddIntoCart productToAdd = new ProductToAddIntoCart("vasya@gmail.com", 1L, 1);
     assertDoesNotThrow(() -> this.productInCartService.addProductToCart(productToAdd));
+  }
+
+  @Test
+  @DisplayName("addProductToCart(ProductInCartEntity) - not matching email")
+  @WithMockUser(username = "petya@gmail.com")
+  final void addProductToCart_notMatchingEmail() throws Exception {
+    ProductToAddIntoCart productToAdd = new ProductToAddIntoCart("vasya@gmail.com", 1L, 1);
+    assertThrows(AccessDeniedException.class,
+        () -> this.productInCartService.addProductToCart(productToAdd));
   }
 
   @Test
