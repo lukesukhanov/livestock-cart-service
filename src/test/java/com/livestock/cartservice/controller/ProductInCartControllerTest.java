@@ -23,16 +23,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.livestock.cartservice.LivestockShopCartServiceApplication;
+import com.livestock.cartservice.Application;
 import com.livestock.cartservice.model.dto.ProductInCartForRead;
 import com.livestock.cartservice.model.dto.ProductToAddIntoCart;
 import com.livestock.cartservice.model.entity.ProductInCartEntity_;
 import com.livestock.cartservice.service.ProductInCartService;
 
-@SpringBootTest(classes = LivestockShopCartServiceApplication.class)
+@SpringBootTest(classes = Application.class)
 @DisplayName("ProductInCartController")
 @Tag("controller")
 @Tag("productInCart")
@@ -87,6 +88,7 @@ class ProductInCartControllerTest {
 
   @Test
   @DisplayName("addProductToCart(ProductToAddIntoCart) - normal return")
+  @WithMockUser(authorities = "SCOPE_cart.write")
   final void addProductToCart_normalReturn() throws Exception {
     ProductToAddIntoCart productToAdd = new ProductToAddIntoCart("vasya@gmail.com", 1L, 1);
     this.mockMvc.perform(post("/productsInCart")
@@ -94,6 +96,29 @@ class ProductInCartControllerTest {
         .content(this.objectMapper.writeValueAsBytes(productToAdd)))
         .andExpectAll(
             status().isNoContent());
+  }
+  
+  @Test
+  @DisplayName("addProductToCart(ProductToAddIntoCart) - missing authority")
+  @WithMockUser
+  final void addProductToCart_missingAuthority() throws Exception {
+    ProductToAddIntoCart productToAdd = new ProductToAddIntoCart("vasya@gmail.com", 1L, 1);
+    this.mockMvc.perform(post("/productsInCart")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(this.objectMapper.writeValueAsBytes(productToAdd)))
+        .andExpectAll(
+            status().isForbidden());
+  }
+  
+  @Test
+  @DisplayName("addProductToCart(ProductToAddIntoCart) - unauthenticated")
+  final void addProductToCart_unauthenticated() throws Exception {
+    ProductToAddIntoCart productToAdd = new ProductToAddIntoCart("vasya@gmail.com", 1L, 1);
+    this.mockMvc.perform(post("/productsInCart")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(this.objectMapper.writeValueAsBytes(productToAdd)))
+        .andExpectAll(
+            status().isUnauthorized());
   }
 
   @Test

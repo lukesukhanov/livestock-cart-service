@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Service for products in cart
-  description: Products-in-cart service for the 'Livestock shop' project.
+  description: Products-in-cart service for the 'Livestock' project.
   contact:
     name: Luke Sukhanov
     email: lukesukhanov@gmail.com
@@ -88,7 +88,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/RequestPropertyTypeMismatchProblem'
-  /productsInCart/{id}:
+  /productsInCart/{productId}:
     delete:
       tags:
       - Products in cart
@@ -245,3 +245,7 @@ components:
         detail:
           type: string
           example: Failed to convert value ...
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
