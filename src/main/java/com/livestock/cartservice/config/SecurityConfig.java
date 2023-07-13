@@ -23,7 +23,7 @@ public class SecurityConfig {
   @Bean
   SecurityFilterChain productsInCartFilterChain(HttpSecurity http) throws Exception {
     return http
-        .securityMatcher("/productsInCart")
+        .securityMatcher("/productsInCart", "/productsInCart/*")
         .securityContext(securityContext -> securityContext
             .requireExplicitSave(true))
         .headers(headers -> headers
@@ -45,8 +45,10 @@ public class SecurityConfig {
         .sessionManagement(sessionManagement -> sessionManagement
             .disable())
         .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+            .requestMatchers(HttpMethod.GET, "/productsInCart").hasAuthority("SCOPE_cart")
             .requestMatchers(HttpMethod.POST, "/productsInCart").hasAuthority("SCOPE_cart.write")
-            .anyRequest().permitAll()) // TODO
+            .requestMatchers(HttpMethod.DELETE, "/productsInCart").hasAuthority("SCOPE_cart.write")
+            .requestMatchers(HttpMethod.DELETE, "/productsInCart/*").hasAuthority("SCOPE_cart.write"))
         .build();
   }
 
@@ -54,12 +56,19 @@ public class SecurityConfig {
   CorsConfigurationSource productsInCartCorsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500"));
-    config.setAllowedMethods(List.of(HttpMethod.POST.toString()));
-    config.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
+    config.setAllowedMethods(List.of(
+        HttpMethod.GET.toString(),
+        HttpMethod.POST.toString(),
+        HttpMethod.DELETE.toString()));
+    config.setAllowedHeaders(List.of(
+        HttpHeaders.AUTHORIZATION,
+        HttpHeaders.CONTENT_TYPE,
+        HttpHeaders.ACCEPT));
     config.setAllowCredentials(true);
     config.setMaxAge(3600L);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/productsInCart", config);
+    source.registerCorsConfiguration("/productsInCart/*", config);
     return source;
   }
 

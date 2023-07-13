@@ -56,6 +56,8 @@ public class ProductInCartController {
    * <li>userEmail - the user's email, type: string, required</li>
    * </ul>
    * <p>
+   * Requires 'cart' scope.
+   * <p>
    * <b>Usage example</b>
    * <p>
    * <i>Request</i>
@@ -66,7 +68,7 @@ public class ProductInCartController {
    * <p>
    * Status: 200<br />
    * Body: {numberOfElements: 5, first: true, last: false, totalElements: 10,
-   * totalPages: 2, content: [{productName: "Овцы бараны", description: "Продаю
+   * totalPages: 2, content: [{productId: 1, productName: "Овцы бараны", description: "Продаю
    * баранов и овец", quantity: 2, price: 9500, currency: "RUB"}, ...]}
    * <p>
    * <i>Response in case of invalid request parameters</i>
@@ -90,7 +92,7 @@ public class ProductInCartController {
    *         using paging
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getByUserIdWithPaging(
+  public ResponseEntity<?> getByUserEmailWithPaging(
       @PositiveOrZero(message = "Page ordinal must be greater than or equal to 0")
       @RequestParam(name = "page", required = false) Integer page,
       @Positive(message = "Page size must be positive")
@@ -123,6 +125,8 @@ public class ProductInCartController {
    * <li>productId - the product's id, type: long, required</li>
    * <li>quantity - how many products to add: integer, required</li>
    * </ul>
+   * <p>
+   * Requires 'cart.write' scope.
    * <p>
    * <b>Usage example</b>
    * <p>
@@ -174,6 +178,8 @@ public class ProductInCartController {
    * <li>userEmail - the user's email, type: string, required</li>
    * </ul>
    * <p>
+   * Requires 'cart.write' scope.
+   * <p>
    * <b>Usage example</b>
    * <p>
    * <i>Request</i>
@@ -211,6 +217,8 @@ public class ProductInCartController {
    * <ul>
    * <li>userEmail - the user's email, type: string, required</li>
    * </ul>
+   * <p>
+   * Requires 'cart.write' scope.
    * <p>
    * <b>Usage example</b>
    * <p>

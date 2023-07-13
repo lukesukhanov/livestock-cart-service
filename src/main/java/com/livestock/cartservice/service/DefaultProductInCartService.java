@@ -29,6 +29,7 @@ public class DefaultProductInCartService implements ProductInCartService {
   private final ProductInCartMapper productInCartMapper;
   
   @Transactional(readOnly = true)
+  @PreAuthorize("#userEmail == authentication.name")
   @Override
   public Page<ProductInCartForRead> getByUserEmailWithPaging(Integer page, Integer size,
       String userEmail) {
@@ -69,12 +70,14 @@ public class DefaultProductInCartService implements ProductInCartService {
   }
 
   @Transactional
+  @PreAuthorize("#userEmail == authentication.name")
   @Override
   public void removeProductFromCart(Long productId, String userEmail) {
     this.productInCartRepository.deleteByProductIdAndUserEmail(productId, userEmail);
   }
 
   @Transactional
+  @PreAuthorize("#userEmail == authentication.name")
   @Override
   public void clearCartByUserEmail(String userEmail) {
     this.productInCartRepository.deleteByUserEmail(userEmail);

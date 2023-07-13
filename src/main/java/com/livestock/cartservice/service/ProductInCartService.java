@@ -12,13 +12,14 @@ public interface ProductInCartService {
 
   /**
    * Finds products in a cart with the given user's email using paging.
+   * <p>
+   * {@code userEmail} must be the same as the current principal username.
    * 
    * @param page a {@code Integer} representing page ordinal
    * @param size a {@code Integer} representing page size
    * @param userEmail a {@code String} with the user's email
    * @return a {@code Page} of products in a cart with the given user's email
-   *         found
-   *         using paging
+   *         found using paging
    */
   Page<ProductInCartForRead> getByUserEmailWithPaging(Integer page, Integer size, String userEmail);
 
@@ -27,6 +28,9 @@ public interface ProductInCartService {
    * The quantity may be negative.<br />
    * If the result quantity is less than or equal to 0, the product is removed
    * from the cart.
+   * <p>
+   * {@code productToAdd.userEmail} must be the same as the current principal
+   * username.
    * 
    * @param product a {@code ProductToAddIntoCart} to add into the user's cart
    */
@@ -34,6 +38,8 @@ public interface ProductInCartService {
 
   /**
    * Removes a product from the cart by product's id and user's email.
+   * <p>
+   * {@code userEmail} must be the same as the current principal username.
    * 
    * @param productId a {@code Long} representing id of the product
    * @param userEmail a {@code String} with the user's email
@@ -42,6 +48,8 @@ public interface ProductInCartService {
 
   /**
    * Clears a cart for the user with the given email.
+   * <p>
+   * {@code userEmail} must be the same as the current principal username.
    * 
    * @param userEmail a {@code String} with the user's email
    */

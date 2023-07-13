@@ -53,6 +53,7 @@ class DefaultProductInCartServiceTest {
 
   @Test
   @DisplayName("getByUserEmailWithPaging(...) - normal return")
+  @WithMockUser(username = "vasya@gmail.com")
   final void getByUserEmailWithPaging_normalReturn() throws Exception {
     String userEmail = "vasya@gmail.com";
     Integer page = 0;
@@ -67,6 +68,17 @@ class DefaultProductInCartServiceTest {
   }
 
   @Test
+  @DisplayName("getByUserEmailWithPaging(...) - not matching principal email")
+  @WithMockUser(username = "petya@gmail.com")
+  final void getByUserEmailWithPaging_notMatchingPrincipalEmail() throws Exception {
+    String userEmail = "vasya@gmail.com";
+    Integer page = 0;
+    Integer size = 10;
+    assertThrows(AccessDeniedException.class,
+        () -> this.productInCartService.getByUserEmailWithPaging(page, size, userEmail));
+  }
+
+  @Test
   @DisplayName("addProductToCart(ProductInCartEntity) - normal return")
   @WithMockUser(username = "vasya@gmail.com")
   final void addProductToCart_normalReturn() throws Exception {
@@ -75,9 +87,9 @@ class DefaultProductInCartServiceTest {
   }
 
   @Test
-  @DisplayName("addProductToCart(ProductInCartEntity) - not matching email")
+  @DisplayName("addProductToCart(ProductInCartEntity) - not matching principal email")
   @WithMockUser(username = "petya@gmail.com")
-  final void addProductToCart_notMatchingEmail() throws Exception {
+  final void addProductToCart_notMatchingPrincipalEmail() throws Exception {
     ProductToAddIntoCart productToAdd = new ProductToAddIntoCart("vasya@gmail.com", 1L, 1);
     assertThrows(AccessDeniedException.class,
         () -> this.productInCartService.addProductToCart(productToAdd));
@@ -85,14 +97,32 @@ class DefaultProductInCartServiceTest {
 
   @Test
   @DisplayName("removeProductFromCart(Long, String) - normal return")
+  @WithMockUser(username = "vasya@gmail.com")
   final void removeProductFromCart_normalReturn() throws Exception {
     assertDoesNotThrow(
         () -> this.productInCartService.removeProductFromCart(1L, "vasya@gmail.com"));
   }
 
   @Test
+  @DisplayName("removeProductFromCart(Long, String) - not matching principal email")
+  @WithMockUser(username = "petya@gmail.com")
+  final void removeProductFromCart_notMatchingPrincipalEmail() throws Exception {
+    assertThrows(AccessDeniedException.class,
+        () -> this.productInCartService.removeProductFromCart(1L, "vasya@gmail.com"));
+  }
+
+  @Test
   @DisplayName("clearCartByUserEmail(String) - normal return")
+  @WithMockUser(username = "vasya@gmail.com")
   final void clearCartByUserEmail_normalReturn() throws Exception {
     assertDoesNotThrow(() -> this.productInCartService.clearCartByUserEmail("vasya@gmail.com"));
+  }
+
+  @Test
+  @DisplayName("clearCartByUserEmail(String) - not matching principal email")
+  @WithMockUser(username = "petya@gmail.com")
+  final void clearCartByUserEmail_notMatchingPrincipalEmail() throws Exception {
+    assertThrows(AccessDeniedException.class,
+        () -> this.productInCartService.clearCartByUserEmail("vasya@gmail.com"));
   }
 }

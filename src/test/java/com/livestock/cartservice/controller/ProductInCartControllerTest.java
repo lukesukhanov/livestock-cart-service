@@ -58,6 +58,7 @@ class ProductInCartControllerTest {
 
   @Test
   @DisplayName("getByUserEmailWithPaging(...) - normal return")
+  @WithMockUser(authorities = "SCOPE_cart")
   final void getByUserEmailWithPaging_normalReturn() throws Exception {
     Integer page = 0;
     Integer size = 10;
@@ -84,6 +85,37 @@ class ProductInCartControllerTest {
             status().isOk(),
             content().contentType(MediaType.APPLICATION_JSON),
             content().bytes(this.objectMapper.writeValueAsBytes(responseBody)));
+  }
+  
+  @Test
+  @DisplayName("getByUserEmailWithPaging(...) - missing authority")
+  @WithMockUser
+  final void getByUserEmailWithPaging_missingAuthority() throws Exception {
+    Integer page = 0;
+    Integer size = 10;
+    String userEMail = "vasya@gmail.com";
+    this.mockMvc.perform(get("/productsInCart")
+        .accept(MediaType.APPLICATION_JSON)
+        .param("page", page.toString())
+        .param("size", size.toString())
+        .param("userEmail", userEMail.toString()))
+        .andExpectAll(
+            status().isForbidden());
+  }
+  
+  @Test
+  @DisplayName("getByUserEmailWithPaging(...) - unauthenticated")
+  final void getByUserEmailWithPaging_unauthenticated() throws Exception {
+    Integer page = 0;
+    Integer size = 10;
+    String userEMail = "vasya@gmail.com";
+    this.mockMvc.perform(get("/productsInCart")
+        .accept(MediaType.APPLICATION_JSON)
+        .param("page", page.toString())
+        .param("size", size.toString())
+        .param("userEmail", userEMail.toString()))
+        .andExpectAll(
+            status().isUnauthorized());
   }
 
   @Test
@@ -123,19 +155,59 @@ class ProductInCartControllerTest {
 
   @Test
   @DisplayName("removeProductFromCart(Long, String) - normal return")
+  @WithMockUser(authorities = "SCOPE_cart.write")
   final void removeProductFromCart_normalReturn() throws Exception {
     this.mockMvc.perform(delete("/productsInCart/1")
         .param("userEmail", "vasya@gmail.com"))
         .andExpectAll(
             status().isNoContent());
   }
+  
+  @Test
+  @DisplayName("removeProductFromCart(Long, String) - missing authority")
+  @WithMockUser
+  final void removeProductFromCart_missingAuthority() throws Exception {
+    this.mockMvc.perform(delete("/productsInCart/1")
+        .param("userEmail", "vasya@gmail.com"))
+        .andExpectAll(
+            status().isForbidden());
+  }
+  
+  @Test
+  @DisplayName("removeProductFromCart(Long, String) - unauthenticated")
+  final void removeProductFromCart_unauthenticated() throws Exception {
+    this.mockMvc.perform(delete("/productsInCart/1")
+        .param("userEmail", "vasya@gmail.com"))
+        .andExpectAll(
+            status().isUnauthorized());
+  }
 
   @Test
   @DisplayName("clearCartByUserEmail(String) - normal return")
+  @WithMockUser(authorities = "SCOPE_cart.write")
   final void clearCartByUserEmail_normalReturn() throws Exception {
     this.mockMvc.perform(delete("/productsInCart")
         .param("userEmail", "vasya@gmail.com"))
         .andExpectAll(
             status().isNoContent());
+  }
+  
+  @Test
+  @DisplayName("clearCartByUserEmail(String) - missing authority")
+  @WithMockUser
+  final void clearCartByUserEmail_missingAuthority() throws Exception {
+    this.mockMvc.perform(delete("/productsInCart")
+        .param("userEmail", "vasya@gmail.com"))
+        .andExpectAll(
+            status().isForbidden());
+  }
+  
+  @Test
+  @DisplayName("clearCartByUserEmail(String) - unauthenticated")
+  final void clearCartByUserEmail_unauthenticated() throws Exception {
+    this.mockMvc.perform(delete("/productsInCart")
+        .param("userEmail", "vasya@gmail.com"))
+        .andExpectAll(
+            status().isUnauthorized());
   }
 }
