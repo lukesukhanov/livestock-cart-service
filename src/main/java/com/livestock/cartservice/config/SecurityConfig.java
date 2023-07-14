@@ -2,9 +2,9 @@ package com.livestock.cartservice.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -20,10 +20,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
+  @Value("${app.security.cors-origins}")
+  private String[] corsOrigins;
+
   @Bean
   SecurityFilterChain productsInCartFilterChain(HttpSecurity http) throws Exception {
     return http
-        .securityMatcher("/productsInCart", "/productsInCart/*")
+        .securityMatcher("/productsInCart/**")
         .securityContext(securityContext -> securityContext
             .requireExplicitSave(true))
         .headers(headers -> headers
@@ -47,15 +50,15 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
             .requestMatchers(HttpMethod.GET, "/productsInCart").hasAuthority("SCOPE_cart")
             .requestMatchers(HttpMethod.POST, "/productsInCart").hasAuthority("SCOPE_cart.write")
-            .requestMatchers(HttpMethod.DELETE, "/productsInCart").hasAuthority("SCOPE_cart.write")
-            .requestMatchers(HttpMethod.DELETE, "/productsInCart/*").hasAuthority("SCOPE_cart.write"))
+            .requestMatchers(HttpMethod.DELETE, "/productsInCart/**")
+            .hasAuthority("SCOPE_cart.write"))
         .build();
   }
 
   @Bean
   CorsConfigurationSource productsInCartCorsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500"));
+    config.setAllowedOrigins(List.of(this.corsOrigins));
     config.setAllowedMethods(List.of(
         HttpMethod.GET.toString(),
         HttpMethod.POST.toString(),
@@ -67,8 +70,7 @@ public class SecurityConfig {
     config.setAllowCredentials(true);
     config.setMaxAge(3600L);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/productsInCart", config);
-    source.registerCorsConfiguration("/productsInCart/*", config);
+    source.registerCorsConfiguration("/productsInCart/**", config);
     return source;
   }
 

@@ -15,16 +15,6 @@
 		</encoder>
 	</appender>
 
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/dev/log.txt</file>
-		<append>false</append>
-		<layout>
-			<pattern>
-				%d{HH:mm:ss.SSS} %level %logger{36} - %msg%n
-			</pattern>
-		</layout>
-	</appender>
-
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
@@ -34,4 +24,5 @@
 	<logger name="org.springframework.security" level="TRACE" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
+	
 </configuration>
