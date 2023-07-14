@@ -2,26 +2,16 @@ package com.livestock.cartservice.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
-
-  @Value("${app.security.cors-origins}")
-  private String[] corsOrigins;
 
   @Bean
   SecurityFilterChain productsInCartFilterChain(HttpSecurity http) throws Exception {
@@ -33,7 +23,7 @@ public class SecurityConfig {
             .httpStrictTransportSecurity(hsts -> hsts
                 .disable()))
         .cors(cors -> cors
-            .configurationSource(productsInCartCorsConfigurationSource()))
+            .disable())
         .csrf(csrf -> csrf
             .disable())
         .logout(logout -> logout
@@ -53,25 +43,6 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.DELETE, "/productsInCart/**")
             .hasAuthority("SCOPE_cart.write"))
         .build();
-  }
-
-  @Bean
-  CorsConfigurationSource productsInCartCorsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of(this.corsOrigins));
-    config.setAllowedMethods(List.of(
-        HttpMethod.GET.toString(),
-        HttpMethod.POST.toString(),
-        HttpMethod.DELETE.toString()));
-    config.setAllowedHeaders(List.of(
-        HttpHeaders.AUTHORIZATION,
-        HttpHeaders.CONTENT_TYPE,
-        HttpHeaders.ACCEPT));
-    config.setAllowCredentials(true);
-    config.setMaxAge(3600L);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/productsInCart/**", config);
-    return source;
   }
 
   @Bean
