@@ -1,6 +1,6 @@
--- changeset lukesukhanov:1
+-- changeset lukesukhanov:4
 
-SET search_path TO livestock_shop_dev;
+SET search_path TO livestock_dev;
 
 -- 'product_in_cart' table
 DROP TABLE IF EXISTS product_in_cart CASCADE;
