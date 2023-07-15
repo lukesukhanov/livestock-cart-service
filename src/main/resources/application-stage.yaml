@@ -34,12 +34,6 @@ spring:
         generate_statistics: false
         temp:
           use_jdbc_metadata_defaults: true
-  liquibase:
-    enabled: true
-    change-log: classpath:/db/changelog/stage/changelog.yaml
-    liquibase-schema: livestock_stage_liquibase
-    default-schema: livestock_stage
-    drop-first: false
   security:
     oauth2:
       resourceserver:

@@ -1,9 +1,0 @@
-databaseChangeLog:
-- include:
-    file: db/changelog/dev/changeset/01-create-schema.sql
-- include:
-    file: db/changelog/dev/changeset/02-create-id-sequence.sql
-- include:
-    file: db/changelog/dev/changeset/03-create-trigger-functions.sql
-- include:
-    file: db/changelog/dev/changeset/04-drop-and-create-cart-table.sql
