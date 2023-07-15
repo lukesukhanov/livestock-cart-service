@@ -8,36 +8,36 @@ info:
     url: https://github.com/lukesukhanov
   version: '1.0'
 servers:
-- url: http://localhost:8765
-- url: http://localhost:8083
+  - url: http://localhost:8765
+  - url: http://localhost:8083
 paths:
   /productsInCart:
     get:
       tags:
-      - Products in cart
+        - Products in cart
       summary: Finds products in a cart by user's email using paging
       description: Requires 'cart' scope. The user's email must be the same as the current principal username.
       parameters:
-      - in: query
-        name: page
-        description: The required page
-        required: false
-        schema:
-          type: integer
-          format: int32
-      - in: query
-        name: size
-        description: The page size
-        required: false
-        schema:
-          type: integer
-          format: int32
-      - in: query
-        name: userEmail
-        description: The user's email
-        required: true
-        schema:
-          type: string
+        - in: query
+          name: page
+          description: The required page
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: size
+          description: The page size
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: userEmail
+          description: The user's email
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: Normal response
@@ -53,7 +53,7 @@ paths:
                 $ref: '#/components/schemas/InvalidRequestParametersProblem'
     post:
       tags:
-      - Products in cart
+        - Products in cart
       summary: Adds the given quantity of the given product into the user's cart
       description: Requires 'cart.write' scope. The user's email must be the same as the current principal username.
       requestBody:
@@ -73,16 +73,16 @@ paths:
                 $ref: '#/components/schemas/InvalidRequestParametersProblem'
     delete:
       tags:
-      - Products in cart
+        - Products in cart
       summary: Clears a cart for the user with the given email.
       description: Requires 'cart.write' scope. The user's email must be the same as the current principal username.
       parameters:
-      - in: query
-        name: userEmail
-        description: The user's email
-        required: true
-        schema:
-          type: string
+        - in: query
+          name: userEmail
+          description: The user's email
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: Normal response
@@ -95,23 +95,23 @@ paths:
   /productsInCart/{productId}:
     delete:
       tags:
-      - Products in cart
+        - Products in cart
       summary: Removes a product from the cart by product's id and user's email
       description: Requires 'cart.write' scope. The user's email must be the same as the current principal username.
       parameters:
-      - in: path
-        name: productId
-        description: The product's id
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - in: query
-        name: userEmail
-        description: The user's email
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: productId
+          description: The product's id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: userEmail
+          description: The user's email
+          required: true
+          schema:
+            type: string
       responses:
         204:
           description: Normal response
