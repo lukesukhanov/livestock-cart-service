@@ -6,7 +6,7 @@ spring:
     name: cart-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=livestock_stage
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=livestock
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       username: postgres
@@ -25,7 +25,7 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        default_schema: livestock_stage
+        default_schema: livestock
         format_sql: true
         jdbc:
           batch_size: 15
@@ -46,7 +46,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone:
-      - http://localhost:8761/eureka
+        - http://localhost:8761/eureka
     healthcheck:
       enabled: true
 
@@ -57,7 +57,7 @@ springdoc:
   enabled: true
   swagger-ui:
     enabled: true
-    url: openapi.yaml
+    url: openapi.yml
     tryItOutEnabled: true
     operationsSorter: method
     disable-swagger-default-url: true
