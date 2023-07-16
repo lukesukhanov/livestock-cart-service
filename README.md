@@ -1,8 +1,9 @@
 <a name="readme-top"></a>
 
 ## About the application
-The cart service for the 'Livestock' project.<br />
+The cart service for the 'Livestock' project.
 <p>
+See also <a href="https://github.com/lukesukhanov/livestock">the main project page.</a>
 
 ## How to run the project
 Start Spring Boot application using 'dev' profile (-Dspring.profiles.active=dev).<br />
