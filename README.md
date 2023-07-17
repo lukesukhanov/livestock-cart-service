@@ -23,6 +23,7 @@ Now you can find Swagger docs on localhost:8083/swagger-ui/index.html.
 ## What tools are exploited
 <ul>
   <li>Spring Boot</li>
+  <li>Hibernate</li>
   <li>Spring Security</li>
   <li>Spring Cloud</li>
   <li>Docker</li>
