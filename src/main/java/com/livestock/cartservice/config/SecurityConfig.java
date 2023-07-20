@@ -40,8 +40,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
             .requestMatchers(HttpMethod.GET, "/productsInCart").hasAuthority("SCOPE_cart")
             .requestMatchers(HttpMethod.POST, "/productsInCart").hasAuthority("SCOPE_cart.write")
-            .requestMatchers(HttpMethod.DELETE, "/productsInCart/**")
-            .hasAuthority("SCOPE_cart.write"))
+            .requestMatchers(HttpMethod.DELETE, "/productsInCart/**").hasAuthority("SCOPE_cart.write"))
         .build();
   }
 
